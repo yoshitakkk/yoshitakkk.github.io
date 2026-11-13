@@ -2,131 +2,412 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="description" content="学びを楽しくする、よしたっくの学習アプリポータル。">
   <title>よしたっくのアプリポータル</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <!-- Tailwind CSS (CDN) -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      --page: #0b1220;
+      --line: rgba(148, 163, 184, 0.14);
+      --muted: #9aabc2;
+      --text: #f2f6fc;
+      --green: #6ee7b7;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 12% 0%, rgba(37, 99, 235, 0.14), transparent 34rem),
+        radial-gradient(ellipse at 88% 14%, rgba(16, 185, 129, 0.09), transparent 28rem),
+        var(--page);
+    }
+
+    a { color: inherit; }
+
+    .page-shell {
+      width: min(100% - 48px, 1080px);
+      margin-inline: auto;
+    }
+
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-block: 25px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      color: #dce8f8;
+      font-size: 0.94rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    main { padding: 32px 0 72px; }
+
+    .library {
+      padding: 25px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(15, 25, 42, 0.76);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.16);
+      backdrop-filter: blur(12px);
+    }
+
+    .library-top {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.45rem;
+      letter-spacing: -0.025em;
+    }
+
+    .app-count {
+      flex: 0 0 auto;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: #b8c6d9;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .app-count strong {
+      margin-right: 3px;
+      color: var(--green);
+      font-size: 0.95rem;
+    }
+
+    .search-wrap {
+      position: relative;
+      margin-bottom: 22px;
+    }
+
+    .search-icon {
+      position: absolute;
+      top: 50%;
+      left: 16px;
+      width: 18px;
+      height: 18px;
+      color: #8294ac;
+      pointer-events: none;
+      transform: translateY(-50%);
+    }
+
+    .search-input {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 16px 12px 45px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 13px;
+      outline: none;
+      color: var(--text);
+      background: rgba(7, 14, 25, 0.55);
+      font: inherit;
+      font-size: 0.94rem;
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .search-input::placeholder { color: #8494a9; }
+
+    .search-input:focus {
+      border-color: rgba(96, 165, 250, 0.72);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.16);
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .app-card {
+      display: flex;
+      min-width: 0;
+      min-height: 226px;
+      flex-direction: column;
+      padding: 19px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: linear-gradient(145deg, rgba(22, 35, 56, 0.95), rgba(17, 28, 46, 0.94));
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .app-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(96, 165, 250, 0.42);
+      background: linear-gradient(145deg, rgba(26, 43, 69, 0.98), rgba(18, 33, 52, 0.98));
+    }
+
+    .card-heading {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+    }
+
+    .app-icon {
+      display: grid;
+      width: 43px;
+      height: 43px;
+      flex: 0 0 auto;
+      place-items: center;
+      border: 1px solid rgba(125, 183, 255, 0.14);
+      border-radius: 13px;
+      background: rgba(59, 130, 246, 0.11);
+      font-size: 1.25rem;
+    }
+
+    .app-card h3 {
+      margin: 2px 0 0;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    .app-card p {
+      margin: 15px 0 20px;
+      color: #a2b1c5;
+      font-size: 0.85rem;
+      line-height: 1.75;
+    }
+
+    .open-link {
+      display: flex;
+      min-height: 45px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      margin-top: auto;
+      border: 1px solid rgba(96, 165, 250, 0.2);
+      border-radius: 11px;
+      color: #dceaff;
+      background: rgba(37, 99, 235, 0.17);
+      font-size: 0.87rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 160ms ease, border-color 160ms ease;
+    }
+
+    .open-link:hover {
+      border-color: rgba(96, 165, 250, 0.55);
+      background: rgba(37, 99, 235, 0.3);
+    }
+
+    .open-link svg { width: 15px; height: 15px; }
+
+    .empty-state {
+      padding: 32px 16px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .empty-state[hidden], .app-card[hidden] { display: none; }
+
+    .site-footer {
+      padding: 22px 0 30px;
+      border-top: 1px solid var(--line);
+      color: #8494a9;
+      font-size: 0.78rem;
+      text-align: center;
+    }
+
+    @media (max-width: 800px) {
+      .page-shell { width: min(100% - 36px, 600px); }
+      .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .library { padding: 21px; }
+      .app-card { min-height: 220px; padding: 16px; }
+    }
+
+    @media (max-width: 520px) {
+      .page-shell { width: calc(100% - 32px); }
+      .site-header { padding-block: 17px; }
+      .site-header { padding-block: 13px; }
+      .brand { gap: 0; font-size: 0.86rem; white-space: nowrap; }
+      main { padding: 19px 0 30px; }
+      .library { padding: 14px; border-radius: 18px; }
+      .library-top { align-items: center; gap: 10px; margin-bottom: 12px; }
+      h2 { font-size: 1.1rem; }
+      .app-count { padding: 5px 8px; font-size: 0.7rem; }
+      .search-wrap { margin-bottom: 11px; }
+      .search-input { min-height: 48px; font-size: 16px; }
+      .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+      .app-card { min-height: 0; padding: 12px; border-radius: 14px; }
+      .card-heading { align-items: center; gap: 9px; }
+      .app-icon { width: 34px; height: 34px; border-radius: 10px; font-size: 1rem; }
+      .app-card h3 { margin: 0; font-size: 0.84rem; line-height: 1.4; }
+      .app-card p { display: none; }
+      .open-link { min-height: 38px; margin-top: 12px; border-radius: 9px; font-size: 0.78rem; }
+      .open-link svg { width: 13px; height: 13px; }
+      .site-footer { padding: 15px 0 20px; }
+    }
+
+    @media (max-width: 360px) {
+      .app-grid { gap: 7px; }
+      .app-card { padding: 10px; }
+      .card-heading { gap: 7px; }
+      .app-icon { width: 30px; height: 30px; }
+      .app-card h3 { font-size: 0.79rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen p-4 md:p-8">
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="よしたっくのアプリポータル ホーム">
+        <span>よしたっくのアプリポータル</span>
+      </a>
+    </header>
 
-  <!-- Header -->
-  <header class="max-w-5xl mx-auto mb-8 text-center md:text-left">
-    <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
-      よしたっくのアプリポータル
-    </h1>
-     </header>
-
-  <main class="max-w-5xl mx-auto space-y-10">
-
-    <!-- Category 1 -->
-    <section>
-      <div class="flex items-center gap-2 mb-4 border-b border-slate-800 pb-2">
-        <span class="text-xl">🛠️</span>
-        <h2 class="text-xl font-semibold text-slate-200">学習アプリ</h2>
-      </div>
-
-      <!-- App Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-        <!-- App Card 1 -->
-        <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden shadow-lg flex flex-col hover:border-blue-500 transition-all">
-          <div class="p-4 flex-1 flex flex-col justify-between">
-            <div>
-              <h3 class="font-bold text-lg text-white mb-4">英検準2級対策</h3>
-            </div>
-            <div class="flex gap-2">
-              <a href="https://yoshitakkk.github.io/Eiken/index.html" target="_blank" class="flex-1 text-center bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 rounded-lg text-sm transition-colors">
-                アプリを開く
-              </a>
-            </div>
+    <main>
+      <section class="library" aria-labelledby="apps-title">
+        <div class="library-top">
+          <div>
+            <h2 id="apps-title">学習アプリ</h2>
           </div>
+          <span class="app-count" aria-live="polite"><strong id="visible-count">6</strong>アプリ</span>
         </div>
 
-        <!-- App Card 2 -->
-        <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden shadow-lg flex flex-col hover:border-blue-500 transition-all">
-          <div class="p-4 flex-1 flex flex-col justify-between">
-            <div>
-              <h3 class="font-bold text-lg text-white mb-4">小学生低学年漢字</h3>
+        <label class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.7"></circle>
+            <path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
+          </svg>
+          <input class="search-input" id="app-search" type="search" placeholder="アプリを検索..." autocomplete="off" aria-label="アプリを検索">
+        </label>
+
+        <div class="app-grid" id="app-grid">
+          <article class="app-card" data-search="英検 準2級 英語 検定">
+            <div class="card-heading">
+              <span class="app-icon" aria-hidden="true">📘</span>
+              <h3>英検準2級対策</h3>
             </div>
-            <div class="flex gap-2">
-              <a href="https://yoshitakkk.github.io/Kanji/index.html" target="_blank" class="flex-1 text-center bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 rounded-lg text-sm transition-colors">
-                アプリを開く
-              </a>
+            <p>英検準2級の合格を目指して、英語の力を楽しく身につけよう。</p>
+            <a class="open-link" href="https://yoshitakkk.github.io/Eiken/index.html" target="_blank" rel="noopener noreferrer">
+              アプリを開く
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 4h9v9M15.5 4.5 8 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </a>
+          </article>
+
+          <article class="app-card" data-search="小学生 低学年 漢字 国語">
+            <div class="card-heading">
+              <span class="app-icon" aria-hidden="true">✍️</span>
+              <h3>小学生低学年漢字</h3>
             </div>
-          </div>
+            <p>クイズに挑戦しながら、漢字の読み書きを練習しよう。</p>
+            <a class="open-link" href="https://yoshitakkk.github.io/Kanji/index.html" target="_blank" rel="noopener noreferrer">
+              アプリを開く
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 4h9v9M15.5 4.5 8 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </a>
+          </article>
+
+          <article class="app-card" data-search="世界 国 クイズ 地理 国旗">
+            <div class="card-heading">
+              <span class="app-icon" aria-hidden="true">🌍</span>
+              <h3>世界の国クイズ</h3>
+            </div>
+            <p>世界の国々について、クイズで楽しく知識を広げよう。</p>
+            <a class="open-link" href="https://yoshitakkk.github.io/NationalFlag/index.html" target="_blank" rel="noopener noreferrer">
+              アプリを開く
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 4h9v9M15.5 4.5 8 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </a>
+          </article>
+
+          <article class="app-card" data-search="元素 記号 クイズ 化学 理科">
+            <div class="card-heading">
+              <span class="app-icon" aria-hidden="true">⚗️</span>
+              <h3>元素記号クイズ</h3>
+            </div>
+            <p>元素記号を覚えて、化学のおもしろさに触れてみよう。</p>
+            <a class="open-link" href="https://yoshitakkk.github.io/Genso/index.html" target="_blank" rel="noopener noreferrer">
+              アプリを開く
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 4h9v9M15.5 4.5 8 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </a>
+          </article>
+
+          <article class="app-card" data-search="日本 地図 クイズ 都道府県 地理">
+            <div class="card-heading">
+              <span class="app-icon" aria-hidden="true">🗾</span>
+              <h3>日本地図クイズ</h3>
+            </div>
+            <p>日本の地図や地域のことを、クイズ形式で学ぼう。</p>
+            <a class="open-link" href="https://yoshitakkk.github.io/PrefecturalCapital/index.html" target="_blank" rel="noopener noreferrer">
+              アプリを開く
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 4h9v9M15.5 4.5 8 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </a>
+          </article>
+
+          <article class="app-card" data-search="サッカー チーム エンブレム クイズ フットボール">
+            <div class="card-heading">
+              <span class="app-icon" aria-hidden="true">⚽</span>
+              <h3>サッカーチームエンブレムクイズ</h3>
+            </div>
+            <p>サッカーチームのエンブレムを見分けて、クイズに挑戦。</p>
+            <a class="open-link" href="https://yoshitakkk.github.io/FottballClabFlag/index.html" target="_blank" rel="noopener noreferrer">
+              アプリを開く
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 4h9v9M15.5 4.5 8 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </a>
+          </article>
         </div>
+        <p class="empty-state" id="empty-state" role="status" hidden>見つかりませんでした。<br>別のキーワードで検索してみてください。</p>
+      </section>
+    </main>
 
-        <!-- App Card 3 -->
-        <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden shadow-lg flex flex-col hover:border-blue-500 transition-all">
-          <div class="p-4 flex-1 flex flex-col justify-between">
-            <div>
-              <h3 class="font-bold text-lg text-white mb-4">世界の国クイズ</h3>
-            </div>
-            <div class="flex gap-2">
-              <a href="https://yoshitakkk.github.io/NationalFlag/index.html" target="_blank" class="flex-1 text-center bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 rounded-lg text-sm transition-colors">
-                アプリを開く
-              </a>
-            </div>
-          </div>
-        </div>
+    <footer class="site-footer">© よしたっくのアプリポータル</footer>
+  </div>
 
-        <!-- App Card 4 -->
-        <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden shadow-lg flex flex-col hover:border-blue-500 transition-all">
-          <div class="p-4 flex-1 flex flex-col justify-between">
-            <div>
-              <h3 class="font-bold text-lg text-white mb-4">元素記号クイズ</h3>
-            </div>
-            <div class="flex gap-2">
-              <a href="https://yoshitakkk.github.io/Genso/index.html" target="_blank" class="flex-1 text-center bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 rounded-lg text-sm transition-colors">
-                アプリを開く
-              </a>
-            </div>
-          </div>
-        </div>
+  <script>
+    const searchInput = document.querySelector("#app-search");
+    const cards = [...document.querySelectorAll(".app-card")];
+    const visibleCount = document.querySelector("#visible-count");
+    const emptyState = document.querySelector("#empty-state");
 
-        <!-- App Card 5 -->
-        <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden shadow-lg flex flex-col hover:border-blue-500 transition-all">
-          <div class="p-4 flex-1 flex flex-col justify-between">
-            <div>
-              <h3 class="font-bold text-lg text-white mb-4">日本地図クイズ</h3>
-            </div>
-            <div class="flex gap-2">
-              <a href="https://yoshitakkk.github.io/PrefecturalCapital/index.html" target="_blank" class="flex-1 text-center bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 rounded-lg text-sm transition-colors">
-                アプリを開く
-              </a>
-            </div>
-          </div>
-        </div>
+    searchInput.addEventListener("input", () => {
+      const query = searchInput.value.trim().toLocaleLowerCase("ja");
+      let count = 0;
 
-         <!-- App Card 6 -->
-        <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden shadow-lg flex flex-col hover:border-blue-500 transition-all">
-          <div class="p-4 flex-1 flex flex-col justify-between">
-            <div>
-              <h3 class="font-bold text-lg text-white mb-4">サッカーチームエンブレムクイズ</h3>
-            </div>
-            <div class="flex gap-2">
-              <a href="https://yoshitakkk.github.io/FottballClabFlag/index.html" target="_blank" class="flex-1 text-center bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 rounded-lg text-sm transition-colors">
-                アプリを開く
-              </a>
-            </div>
-          </div>
-        </div>
+      for (const card of cards) {
+        const matches = `${card.textContent} ${card.dataset.search}`.toLocaleLowerCase("ja").includes(query);
+        card.hidden = !matches;
+        if (matches) count += 1;
+      }
 
-      </div>
-    </section>
-
-    <!-- Category 2 -->
-    <section>
-      <div class="flex items-center gap-2 mb-4 border-b border-slate-800 pb-2">
-        <span class="text-xl">🎮</span>
-        <h2 class="text-xl font-semibold text-slate-200">ゲーム・ミニアプリ</h2>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- アプリカードを追加 -->
-      </div>
-    </section>
-
-  </main>
+      visibleCount.textContent = String(count);
+      emptyState.hidden = count !== 0;
+    });
+  </script>
 </body>
-</html>　
+</html>
