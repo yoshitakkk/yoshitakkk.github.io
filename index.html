@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1220">
-  <meta name="description" content="学びを楽しくする、よしたっくの学習アプリポータル。">
+  <meta name="description" content="学習アプリやスポーツ情報サイトを紹介する、よしたっくのポータル。">
   <title>よしたっくのアプリポータル</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
@@ -60,7 +60,11 @@
       text-decoration: none;
     }
 
-    main { padding: 32px 0 72px; }
+    main {
+      display: grid;
+      gap: 20px;
+      padding: 32px 0 72px;
+    }
 
     .library {
       padding: 25px;
@@ -298,7 +302,7 @@
           <div>
             <h2 id="apps-title">学習アプリ</h2>
           </div>
-          <span class="app-count" aria-live="polite"><strong id="visible-count">6</strong>アプリ</span>
+          <span class="app-count" aria-live="polite">表示中 <strong id="visible-count">7</strong>件</span>
         </div>
 
         <label class="search-wrap">
@@ -306,7 +310,7 @@
             <circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.7"></circle>
             <path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
           </svg>
-          <input class="search-input" id="app-search" type="search" placeholder="アプリを検索..." autocomplete="off" aria-label="アプリを検索">
+          <input class="search-input" id="app-search" type="search" placeholder="サイト・アプリを検索..." autocomplete="off" aria-label="サイト・アプリを検索">
         </label>
 
         <div class="app-grid" id="app-grid">
@@ -384,6 +388,28 @@
         </div>
         <p class="empty-state" id="empty-state" role="status" hidden>見つかりませんでした。<br>別のキーワードで検索してみてください。</p>
       </section>
+
+      <section class="library" aria-labelledby="sports-title">
+        <div class="library-top">
+          <div>
+            <h2 id="sports-title">スポーツ・情報サイト</h2>
+          </div>
+        </div>
+
+        <div class="app-grid">
+          <article class="app-card" data-search="柏レイソル 柏 レイソル サッカー Jリーグ スポーツ">
+            <div class="card-heading">
+              <span class="app-icon" aria-hidden="true">⚽</span>
+              <h3>柏レイソル情報サイト</h3>
+            </div>
+            <p>柏レイソルに関する情報をチェック。</p>
+            <a class="open-link" href="https://yoshitakkk.github.io/Reysol/index.html" target="_blank" rel="noopener noreferrer">
+              サイトを開く
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 4h9v9M15.5 4.5 8 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </a>
+          </article>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">© よしたっくのアプリポータル</footer>
@@ -394,6 +420,7 @@
     const cards = [...document.querySelectorAll(".app-card")];
     const visibleCount = document.querySelector("#visible-count");
     const emptyState = document.querySelector("#empty-state");
+    const categories = [...document.querySelectorAll(".library")];
 
     searchInput.addEventListener("input", () => {
       const query = searchInput.value.trim().toLocaleLowerCase("ja");
@@ -407,6 +434,9 @@
 
       visibleCount.textContent = String(count);
       emptyState.hidden = count !== 0;
+      for (const category of categories.slice(1)) {
+        category.hidden = !category.querySelector(".app-card:not([hidden])");
+      }
     });
   </script>
 </body>
